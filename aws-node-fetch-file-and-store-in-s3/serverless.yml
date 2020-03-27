@@ -3,11 +3,11 @@ service: aws-node-fetch-file-and-store-in-s3
 frameworkVersion: ">=1.1.0"
 
 custom:
-  bucket: <your-bucket-name>
+  bucket: jacobhsu-serverless
 
 provider:
   name: aws
-  runtime: nodejs8.10
+  runtime: nodejs12.x
   stage: dev
   region: us-west-1
   iamRoleStatements:

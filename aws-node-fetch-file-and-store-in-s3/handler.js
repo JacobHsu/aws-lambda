@@ -24,3 +24,17 @@ module.exports.save = (event, context, callback) => {
     ))
     .then(v => callback(null, v), callback);
 };
+
+module.exports.test = (event) => {
+
+  fetch(event.image_url)
+  .then((response) => {
+    if (response.ok) {
+      return response;
+    }
+    return Promise.reject(new Error(
+          `Failed to fetch ${response.url}: ${response.status} ${response.statusText}`));
+  })
+  .then(response => response.buffer());
+}
+

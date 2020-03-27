@@ -16,6 +16,9 @@ service: tw-ipo-revenue
 #app: your-app-name
 #org: your-org-name
 
+custom:
+  outputBucket: jacobhsu-serverless # 將會把資料最後放到這個 S3 bucket 中
+
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 # frameworkVersion: "=X.X.X"
@@ -25,18 +28,20 @@ provider:
   runtime: nodejs12.x
 
 # you can overwrite defaults here
-#  stage: dev
-#  region: us-east-1
+  stage: dev
+  region: us-east-1
 
 # you can add statements to the Lambda function's IAM Role here
-#  iamRoleStatements:
-#    - Effect: "Allow"
+  iamRoleStatements:
+    - Effect: "Allow"
 #      Action:
 #        - "s3:ListBucket"
 #      Resource: { "Fn::Join" : ["", ["arn:aws:s3:::", { "Ref" : "ServerlessDeploymentBucket" } ] ]  }
 #    - Effect: "Allow"
-#      Action:
-#        - "s3:PutObject"
+      Action:
+        -  s3:PutObject
+        -  s3:PutObjectAcl
+      Resource: "arn:aws:s3:::${self:custom.outputBucket}/*"   
 #      Resource:
 #        Fn::Join:
 #          - ""
@@ -60,6 +65,15 @@ provider:
 functions:
   hello:
     handler: handler.hello
+  # 你要 trigger 的 function 寫在這
+  crawl:
+    handler: handler.crawl
+    environment:
+      OUTPUT_BUCKET: ${self:custom.outputBucket}
+    events:
+      # cron job 設定多久多少時間要 trigger 這個 function
+      # https://serverless.com/framework/docs/providers/aws/events/schedule/
+      - schedule: cron(0 8 * * ? *)
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
