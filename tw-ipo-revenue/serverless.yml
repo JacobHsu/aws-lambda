@@ -73,7 +73,7 @@ functions:
     events:
       # cron job 設定多久多少時間要 trigger 這個 function
       # https://serverless.com/framework/docs/providers/aws/events/schedule/
-      - schedule: cron(0 8 * * ? *)
+      - schedule: cron(0 8 3 * ? *)
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
